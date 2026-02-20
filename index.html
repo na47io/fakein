@@ -85,6 +85,10 @@ body {
   color: rgba(0, 0, 0, 0.6);
 }
 
+.meta-sep::before {
+  content: " \00b7 ";
+}
+
 .description {
   font-size: 1.4rem;
   line-height: 1.5;
@@ -189,8 +193,8 @@ a {
   gap: 0.4rem;
 }
 
-.section:hover > .section-actions,
-.entry:hover > .entry-actions {
+.section:hover .section-actions,
+.entry:hover .entry-actions {
   display: flex;
 }
 
@@ -246,6 +250,43 @@ a {
 .logo-wrap:hover .logo-edit {
   display: flex;
 }
+
+/* AI prompt bar */
+.ai-bar {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.ai-bar input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 1.2rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid rgba(140, 140, 140, 0.2);
+  border-radius: 4px;
+}
+
+.ai-bar button {
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #0a66c2;
+  background: #0a66c2;
+  color: #fff;
+}
+
+.ai-bar button:hover {
+  background: #004182;
+}
+
+.ai-bar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 </style>
 </head>
 <body>
@@ -255,23 +296,25 @@ a {
 <div class="toolbar">
   <button class="btn-add" onclick="addSection()">+ Section</button>
   <button class="btn-primary" onclick="save()">Save JSON</button>
+  <button class="btn-primary" onclick="savePng()">Save PNG</button>
   <button class="btn-add" onclick="loadFile()">Load JSON</button>
 </div>
 
 <script>
 const SKILLS_ICON = `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" width="16" height="16"><path d="M12.67 2H3.33L1 6l7 8 7-8zM8.01 4h3.51l.87 1.5H3.61L4.49 4h3.53zM4.1 6.5h7.81l-3.9 4.46-3.9-4.46z"></path></svg>`;
 
-const DEFAULT_DATA = {"sections":[]};
-
-let data = DEFAULT_DATA;
+let data = {"sections":[{"heading":"Experience","entries":[{"title":"Chief Software Development Architect & Senior Principal Engineer of Technical Solutions & Platforms","subtitle":"Querio \u00b7 Full-time","meta":["Jan 2025 - Present \u00b7 1 yr 2 mos","behind you"],"logo":{"url":"https://www.linkedin.com/company/94249277/","src":"https://media.licdn.com/dms/image/v2/D4E0BAQEJHf-p24xMMA/company-logo_100_100/B4EZtK4yyRIoAU-/0/1766487961551/querioai_logo?e=1773273600&v=beta&t=yaefur4dIIOINNyXZmF5BVNO-1a24KXco305BeMD6yY","alt":"Querio logo"},"skills":"bs search and destroy , high chaos tolerance  and +1 skill"},{"title":"Software Engineer","subtitle":"Coremont","meta":["Oct 2021 - Jan 2025 \u00b7 3 yrs 4 mos","Greater London, England, United Kingdom"],"logo":{"url":"https://www.linkedin.com/company/35570842/","src":"https://media.licdn.com/dms/image/v2/C4E0BAQGLT7XYExpWtA/company-logo_100_100/company-logo_100_100/0/1655105714633/coremont_logo?e=1773273600&v=beta&t=FLjt2Lp5HLO9y4paf7mUqBu6UB75K0z6lliUwHFVRAQ","alt":"Coremont logo"},"skills":"top 5% standup nodding speed globally"},{"title":"Software Engineer","subtitle":"Patchworks","meta":["Jun 2021 - Oct 2021 \u00b7 5 mos"],"logo":{"url":"https://www.linkedin.com/company/5294972/","src":"https://media.licdn.com/dms/image/v2/C4E0BAQE_61eG7nxmaA/company-logo_100_100/company-logo_100_100/0/1658133955989/patchworks_logo?e=1773273600&v=beta&t=izX11tr7drggEIjHQ62UeAHwEcYx6710kEjxHE7o03k","alt":"Patchworks logo"}},{"title":"Software Engineer","subtitle":"Qmee","meta":["Jun 2019 - Aug 2019 \u00b7 3 mos","Reading, England, United Kingdom"],"logo":{"url":"https://www.linkedin.com/company/2900212/","src":"https://media.licdn.com/dms/image/v2/C4E0BAQGAWR846QBcsg/company-logo_100_100/company-logo_100_100/0/1660223417523/qmee_logo?e=1773273600&v=beta&t=z0zRtbZRXwMCmIazEdTlkhUvbxXBRZ9aRSGggedq-dg","alt":"Qmee logo"}},{"title":"Software Engineer","subtitle":"Elixirr","meta":["Jun 2018 - Aug 2018 \u00b7 3 mos","London Area, United Kingdom"],"logo":{"url":"https://www.linkedin.com/company/711599/","src":"https://media.licdn.com/dms/image/v2/D4E0BAQGSKHqQ4uTn5Q/company-logo_100_100/company-logo_100_100/0/1708013282669/elixirr_logo?e=1773273600&v=beta&t=ACVizTaYzK9t-cy-mQssmNsgMNZwbuHgGkS5BeqhsvQ","alt":"Elixirr logo"},"description":"- PHP development with Laravel\r\n- Design and implement content management systems for multiple products\r\n- Front End experience with Vue JS, SASS, SCSS","skills":"writing lines, smashing deadlines"}]}]};
 
 function render() {
   const app = document.getElementById('app');
   app.innerHTML = data.sections.map((section, si) => {
     const entries = section.entries.map((entry, ei) => {
-      const metaHtml = (entry.meta || []).map(line =>
-        `<p class="meta" contenteditable="true" data-s="${si}" data-e="${ei}" data-field="meta">${esc(line)}</p>`
-      ).join('');
+      // Meta rendered as dot-separated inline spans
+      const metaParts = (entry.meta || []).map((line, mi) => {
+        const sep = mi > 0 ? '<span class="meta-sep"></span>' : '';
+        return `${sep}<span contenteditable="true" data-s="${si}" data-e="${ei}" data-mi="${mi}" data-field="meta">${esc(line)}</span>`;
+      }).join('');
+      const metaHtml = metaParts ? `<p class="meta">${metaParts}</p>` : '';
 
       const descHtml = entry.description
         ? `<p class="description" contenteditable="true" data-s="${si}" data-e="${ei}" data-field="description">${esc(entry.description)}</p>`
@@ -280,6 +323,9 @@ function render() {
       const skillsHtml = entry.skills
         ? `<div class="skills">${SKILLS_ICON}<span contenteditable="true" data-s="${si}" data-e="${ei}" data-field="skills">${esc(entry.skills)}</span></div>`
         : '';
+
+      const hasDesc = !!entry.description;
+      const hasSkills = !!entry.skills;
 
       return `<div class="entry">
         <div class="logo-wrap">
@@ -295,8 +341,8 @@ function render() {
         </div>
         <div class="entry-actions">
           <button class="action-btn" onclick="addMeta(${si}, ${ei})">+meta</button>
-          <button class="action-btn" onclick="toggleDesc(${si}, ${ei})">+desc</button>
-          <button class="action-btn" onclick="toggleSkills(${si}, ${ei})">+skills</button>
+          ${hasDesc ? '' : `<button class="action-btn" onclick="toggleDesc(${si}, ${ei})">+desc</button>`}
+          ${hasSkills ? '' : `<button class="action-btn" onclick="toggleSkills(${si}, ${ei})">+skills</button>`}
           <button class="action-btn remove" onclick="removeEntry(${si}, ${ei})">×</button>
         </div>
       </div>`;
@@ -339,9 +385,14 @@ function handleEdit(e) {
   const entry = data.sections[si].entries[ei];
 
   if (field === 'meta') {
-    // Rebuild meta array from all meta elements for this entry
-    const metas = document.querySelectorAll(`[data-s="${si}"][data-e="${ei}"][data-field="meta"]`);
-    entry.meta = Array.from(metas).map(m => m.innerText.trim()).filter(Boolean);
+    const mi = parseInt(el.dataset.mi);
+    const trimmed = text.trim();
+    if (trimmed) {
+      entry.meta[mi] = trimmed;
+    } else {
+      entry.meta.splice(mi, 1);
+      render();
+    }
   } else {
     entry[field] = text;
   }
@@ -373,6 +424,7 @@ function removeEntry(si, ei) {
 }
 
 function addMeta(si, ei) {
+  if (!data.sections[si].entries[ei].meta) data.sections[si].entries[ei].meta = [];
   data.sections[si].entries[ei].meta.push('New line');
   render();
 }
@@ -412,7 +464,6 @@ function editLogo(si, ei) {
 }
 
 function save() {
-  // Sync any focused contenteditable before saving
   if (document.activeElement?.hasAttribute('contenteditable')) {
     document.activeElement.blur();
   }
@@ -441,12 +492,26 @@ function loadFile() {
   input.click();
 }
 
-// Load initial data
-fetch('data.json')
-  .then(r => r.ok ? r.json() : DEFAULT_DATA)
-  .then(d => { data = d; render(); })
-  .catch(() => { data = DEFAULT_DATA; render(); });
+function savePng() {
+  if (document.activeElement?.hasAttribute('contenteditable')) {
+    document.activeElement.blur();
+  }
+  // Hide action buttons during capture
+  const app = document.getElementById('app');
+  app.querySelectorAll('.entry-actions, .section-actions').forEach(el => el.style.display = 'none');
+
+  html2canvas(app, { backgroundColor: '#f4f2ee', scale: 2, useCORS: true }).then(canvas => {
+    app.querySelectorAll('.entry-actions, .section-actions').forEach(el => el.style.display = '');
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = 'linkedin.png';
+    a.click();
+  });
+}
+
+render();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 </body>
 </html>
