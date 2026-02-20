@@ -23,5 +23,17 @@ def logo_proxy():
         return "failed", 502
 
 
+@app.route("/img")
+def img_proxy():
+    url = request.args.get("u", "")
+    if not url:
+        return "missing url", 400
+    try:
+        r = requests.get(url, timeout=10)
+        return Response(r.content, content_type=r.headers.get("Content-Type", "image/png"))
+    except Exception:
+        return "failed", 502
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
