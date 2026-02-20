@@ -14,10 +14,23 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Oxygen, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
   color: rgba(0, 0, 0, 0.9);
   background: #f4f2ee;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   padding: 2.4rem;
+}
+
+.layout {
+  display: flex;
+  gap: 2.4rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+/* ---- Preview ---- */
+
+.preview {
+  flex: 1;
+  position: sticky;
+  top: 2.4rem;
 }
 
 .section {
@@ -25,7 +38,6 @@ body {
   flex-direction: column;
   padding: 2.4rem;
   background: #fff;
-  max-width: 792px;
   width: 100%;
   border-radius: 0.8rem;
   border: 1px solid rgba(140, 140, 140, 0.2);
@@ -133,40 +145,352 @@ a {
   color: #0a66c2;
   text-decoration: none;
 }
+
+/* ---- Editor ---- */
+
+.editor {
+  flex: 1;
+}
+
+.editor-section {
+  background: #fff;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(140, 140, 140, 0.2);
+  padding: 2.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.editor-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.6rem;
+}
+
+.editor-section-heading {
+  font-size: 2rem;
+  font-weight: 600;
+  flex: 1;
+  border: 1px solid rgba(140, 140, 140, 0.2);
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  font-family: inherit;
+}
+
+.editor-entry {
+  padding: 1.2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.editor-entry + .editor-entry {
+  border-top: 1px solid rgba(140, 140, 140, 0.2);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.field label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field input, .field textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1.4rem;
+  border: 1px solid rgba(140, 140, 140, 0.2);
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  line-height: 1.5;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 3.6rem;
+}
+
+.logo-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 1.4rem;
+  font-weight: 600;
+  padding: 0.6rem 1.6rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+}
+
+.btn-primary {
+  background: #0a66c2;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #004182;
+}
+
+.btn-sm {
+  font-size: 1.2rem;
+  padding: 0.3rem 1rem;
+}
+
+.btn-add {
+  background: #e8f0fe;
+  color: #0a66c2;
+}
+
+.btn-add:hover {
+  background: #d4e4fc;
+}
+
+.btn-remove {
+  background: #fce8e8;
+  color: #c00;
+}
+
+.btn-remove:hover {
+  background: #f8d0d0;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.entry-label {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.4);
+}
 </style>
 </head>
 <body>
 
-{% for section in sections %}
-<div class="section">
-  <h2 class="section-heading">{{ section.heading }}</h2>
-  {% for entry in section.entries %}
-  <div class="entry">
-    <a class="logo" href="{{ entry.logo.url }}">
-      <img alt="{{ entry.logo.alt }}" src="{{ entry.logo.src }}">
-    </a>
-    <div class="details">
-      <p class="title">{{ entry.title }}</p>
-      {% if entry.subtitle %}
-      <p class="subtitle">{{ entry.subtitle }}</p>
-      {% endif %}
-      {% for line in entry.meta %}
-      <p class="meta">{{ line }}</p>
-      {% endfor %}
-      {% if entry.description %}
-      <p class="description">{{ entry.description }}</p>
-      {% endif %}
-      {% if entry.skills %}
-      <div class="skills">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" width="16" height="16"><path d="M12.67 2H3.33L1 6l7 8 7-8zM8.01 4h3.51l.87 1.5H3.61L4.49 4h3.53zM4.1 6.5h7.81l-3.9 4.46-3.9-4.46z"></path></svg>
-        <a href="#">{{ entry.skills }}</a>
+<div class="layout">
+  <!-- Preview -->
+  <div class="preview">
+    {% for section in sections %}
+    <div class="section">
+      <h2 class="section-heading">{{ section.heading }}</h2>
+      {% for entry in section.entries %}
+      <div class="entry">
+        <a class="logo" href="{{ entry.logo.url }}">
+          <img alt="{{ entry.logo.alt }}" src="{{ entry.logo.src }}">
+        </a>
+        <div class="details">
+          <p class="title">{{ entry.title }}</p>
+          {% if entry.subtitle %}
+          <p class="subtitle">{{ entry.subtitle }}</p>
+          {% endif %}
+          {% for line in entry.meta %}
+          <p class="meta">{{ line }}</p>
+          {% endfor %}
+          {% if entry.description %}
+          <p class="description">{{ entry.description }}</p>
+          {% endif %}
+          {% if entry.skills %}
+          <div class="skills">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" width="16" height="16"><path d="M12.67 2H3.33L1 6l7 8 7-8zM8.01 4h3.51l.87 1.5H3.61L4.49 4h3.53zM4.1 6.5h7.81l-3.9 4.46-3.9-4.46z"></path></svg>
+            <a href="#">{{ entry.skills }}</a>
+          </div>
+          {% endif %}
+        </div>
       </div>
-      {% endif %}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Editor -->
+  <form class="editor" method="POST" action="/" onsubmit="reindex()">
+    <div id="sections-container">
+      {% for section in sections %}
+      {% set si = loop.index0 %}
+      <div class="editor-section" data-section>
+        <div class="editor-section-header">
+          <input type="text" class="editor-section-heading"
+                 data-field="heading" value="{{ section.heading }}">
+          <button type="button" class="btn btn-sm btn-remove" onclick="removeSection(this)">Remove section</button>
+        </div>
+
+        <div data-entries>
+          {% for entry in section.entries %}
+          <div class="editor-entry" data-entry>
+            <div class="entry-header">
+              <span class="entry-label">Entry</span>
+              <button type="button" class="btn btn-sm btn-remove" onclick="removeEntry(this)">Remove</button>
+            </div>
+            <div class="field">
+              <label>Title</label>
+              <input type="text" data-field="title" value="{{ entry.title }}">
+            </div>
+            <div class="field">
+              <label>Subtitle</label>
+              <input type="text" data-field="subtitle" value="{{ entry.subtitle or '' }}">
+            </div>
+            <div class="field">
+              <label>Meta (one per line)</label>
+              <textarea data-field="meta" rows="2">{{ entry.meta | join('\n') }}</textarea>
+            </div>
+            <div class="logo-fields">
+              <div class="field">
+                <label>Logo Link</label>
+                <input type="text" data-field="logo_url" value="{{ entry.logo.url }}">
+              </div>
+              <div class="field">
+                <label>Logo Image</label>
+                <input type="text" data-field="logo_src" value="{{ entry.logo.src }}">
+              </div>
+              <div class="field">
+                <label>Logo Alt</label>
+                <input type="text" data-field="logo_alt" value="{{ entry.logo.alt }}">
+              </div>
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea data-field="description" rows="3">{{ entry.description or '' }}</textarea>
+            </div>
+            <div class="field">
+              <label>Skills</label>
+              <input type="text" data-field="skills" value="{{ entry.skills or '' }}">
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-sm btn-add" onclick="addEntry(this)">+ Add entry</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-add" onclick="addSection()">+ Add section</button>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </form>
+</div>
+
+<template id="entry-template">
+  <div class="editor-entry" data-entry>
+    <div class="entry-header">
+      <span class="entry-label">Entry</span>
+      <button type="button" class="btn btn-sm btn-remove" onclick="removeEntry(this)">Remove</button>
+    </div>
+    <div class="field">
+      <label>Title</label>
+      <input type="text" data-field="title" value="">
+    </div>
+    <div class="field">
+      <label>Subtitle</label>
+      <input type="text" data-field="subtitle" value="">
+    </div>
+    <div class="field">
+      <label>Meta (one per line)</label>
+      <textarea data-field="meta" rows="2"></textarea>
+    </div>
+    <div class="logo-fields">
+      <div class="field">
+        <label>Logo Link</label>
+        <input type="text" data-field="logo_url" value="#">
+      </div>
+      <div class="field">
+        <label>Logo Image</label>
+        <input type="text" data-field="logo_src" value="">
+      </div>
+      <div class="field">
+        <label>Logo Alt</label>
+        <input type="text" data-field="logo_alt" value="">
+      </div>
+    </div>
+    <div class="field">
+      <label>Description</label>
+      <textarea data-field="description" rows="3"></textarea>
+    </div>
+    <div class="field">
+      <label>Skills</label>
+      <input type="text" data-field="skills" value="">
     </div>
   </div>
-  {% endfor %}
-</div>
-{% endfor %}
+</template>
+
+<template id="section-template">
+  <div class="editor-section" data-section>
+    <div class="editor-section-header">
+      <input type="text" class="editor-section-heading"
+             data-field="heading" value="" placeholder="Section name">
+      <button type="button" class="btn btn-sm btn-remove" onclick="removeSection(this)">Remove section</button>
+    </div>
+    <div data-entries></div>
+    <div class="actions">
+      <button type="button" class="btn btn-sm btn-add" onclick="addEntry(this)">+ Add entry</button>
+    </div>
+  </div>
+</template>
+
+<script>
+function addEntry(btn) {
+  const section = btn.closest('[data-section]');
+  const container = section.querySelector('[data-entries]');
+  const tpl = document.getElementById('entry-template');
+  container.appendChild(tpl.content.cloneNode(true));
+}
+
+function removeEntry(btn) {
+  const entry = btn.closest('[data-entry]');
+  entry.remove();
+}
+
+function addSection() {
+  const container = document.getElementById('sections-container');
+  const tpl = document.getElementById('section-template');
+  container.appendChild(tpl.content.cloneNode(true));
+}
+
+function removeSection(btn) {
+  const section = btn.closest('[data-section]');
+  section.remove();
+}
+
+function reindex() {
+  const sections = document.querySelectorAll('[data-section]');
+  sections.forEach((section, si) => {
+    const heading = section.querySelector('[data-field="heading"]');
+    heading.name = `s${si}_heading`;
+
+    const entries = section.querySelectorAll('[data-entry]');
+    entries.forEach((entry, ei) => {
+      const p = `s${si}_e${ei}`;
+      entry.querySelectorAll('[data-field]').forEach(field => {
+        field.name = `${p}_${field.dataset.field}`;
+      });
+    });
+  });
+}
+</script>
 
 </body>
 </html>
