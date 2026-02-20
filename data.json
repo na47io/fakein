@@ -1,0 +1,88 @@
+{
+  "sections": [
+    {
+      "heading": "Experience",
+      "entries": [
+        {
+          "title": "Chief Software Development Architect & Senior Principal Engineer of Technical Solutions & Platforms",
+          "subtitle": "Querio · Full-time",
+          "meta": ["Jan 2025 - Present · 1 yr 2 mos", "behind you"],
+          "logo": {
+            "url": "https://www.linkedin.com/company/94249277/",
+            "src": "https://media.licdn.com/dms/image/v2/D4E0BAQEJHf-p24xMMA/company-logo_100_100/B4EZtK4yyRIoAU-/0/1766487961551/querioai_logo?e=1773273600&v=beta&t=yaefur4dIIOINNyXZmF5BVNO-1a24KXco305BeMD6yY",
+            "alt": "Querio logo"
+          },
+          "skills": "bs search and destroy , high chaos tolerance  and +1 skill"
+        },
+        {
+          "title": "Software Engineer",
+          "subtitle": "Coremont",
+          "meta": ["Oct 2021 - Jan 2025 · 3 yrs 4 mos", "Greater London, England, United Kingdom"],
+          "logo": {
+            "url": "https://www.linkedin.com/company/35570842/",
+            "src": "https://media.licdn.com/dms/image/v2/C4E0BAQGLT7XYExpWtA/company-logo_100_100/company-logo_100_100/0/1655105714633/coremont_logo?e=1773273600&v=beta&t=FLjt2Lp5HLO9y4paf7mUqBu6UB75K0z6lliUwHFVRAQ",
+            "alt": "Coremont logo"
+          },
+          "skills": "top 5% standup nodding speed globally"
+        },
+        {
+          "title": "Software Engineer",
+          "subtitle": "Patchworks",
+          "meta": ["Jun 2021 - Oct 2021 · 5 mos"],
+          "logo": {
+            "url": "https://www.linkedin.com/company/5294972/",
+            "src": "https://media.licdn.com/dms/image/v2/C4E0BAQE_61eG7nxmaA/company-logo_100_100/company-logo_100_100/0/1658133955989/patchworks_logo?e=1773273600&v=beta&t=izX11tr7drggEIjHQ62UeAHwEcYx6710kEjxHE7o03k",
+            "alt": "Patchworks logo"
+          }
+        },
+        {
+          "title": "Software Engineer",
+          "subtitle": "Qmee",
+          "meta": ["Jun 2019 - Aug 2019 · 3 mos", "Reading, England, United Kingdom"],
+          "logo": {
+            "url": "https://www.linkedin.com/company/2900212/",
+            "src": "https://media.licdn.com/dms/image/v2/C4E0BAQGAWR846QBcsg/company-logo_100_100/company-logo_100_100/0/1660223417523/qmee_logo?e=1773273600&v=beta&t=z0zRtbZRXwMCmIazEdTlkhUvbxXBRZ9aRSGggedq-dg",
+            "alt": "Qmee logo"
+          }
+        },
+        {
+          "title": "Software Engineer",
+          "subtitle": "Elixirr",
+          "meta": ["Jun 2018 - Aug 2018 · 3 mos", "London Area, United Kingdom"],
+          "logo": {
+            "url": "https://www.linkedin.com/company/711599/",
+            "src": "https://media.licdn.com/dms/image/v2/D4E0BAQGSKHqQ4uTn5Q/company-logo_100_100/company-logo_100_100/0/1708013282669/elixirr_logo?e=1773273600&v=beta&t=ACVizTaYzK9t-cy-mQssmNsgMNZwbuHgGkS5BeqhsvQ",
+            "alt": "Elixirr logo"
+          },
+          "description": "- PHP development with Laravel\n- Design and implement content management systems for multiple products\n- Front End experience with Vue JS, SASS, SCSS",
+          "skills": "writing lines, smashing deadlines"
+        }
+      ]
+    },
+    {
+      "heading": "Education",
+      "entries": [
+        {
+          "title": "University of Placeholder",
+          "subtitle": "Bachelor of Science - BS, Computer Science",
+          "meta": ["2017 - 2021"],
+          "logo": {
+            "url": "#",
+            "src": "https://media.licdn.com/dms/image/v2/C4E0BAQEjMCRpBuUiYg/company-logo_100_100/company-logo_100_100/0/1631355051939?e=1773273600&v=beta&t=placeholder",
+            "alt": "University logo"
+          }
+        },
+        {
+          "title": "Placeholder Sixth Form",
+          "subtitle": "A-Levels, Maths, Computer Science, Physics",
+          "meta": ["2015 - 2017"],
+          "logo": {
+            "url": "#",
+            "src": "https://media.licdn.com/dms/image/v2/C4E0BAQEjMCRpBuUiYg/company-logo_100_100/company-logo_100_100/0/1631355051939?e=1773273600&v=beta&t=placeholder",
+            "alt": "School logo"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -15,11 +15,12 @@ body {
   color: rgba(0, 0, 0, 0.9);
   background: #f4f2ee;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   padding: 2.4rem;
 }
 
-.experience {
+.section {
   display: flex;
   flex-direction: column;
   padding: 2.4rem;
@@ -28,6 +29,10 @@ body {
   width: 100%;
   border-radius: 0.8rem;
   border: 1px solid rgba(140, 140, 140, 0.2);
+}
+
+.section + .section {
+  margin-top: 0.8rem;
 }
 
 .entry {
@@ -132,7 +137,7 @@ a {
 </head>
 <body>
 
-<div class="experience">
+<div class="section">
   <h2 class="section-heading">Experience</h2>
   <div class="entry">
     <a class="logo" href="https://www.linkedin.com/company/94249277/">
@@ -205,6 +210,31 @@ a {
         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" width="16" height="16"><path d="M12.67 2H3.33L1 6l7 8 7-8zM8.01 4h3.51l.87 1.5H3.61L4.49 4h3.53zM4.1 6.5h7.81l-3.9 4.46-3.9-4.46z"></path></svg>
         <a href="#">writing lines, smashing deadlines</a>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-heading">Education</h2>
+  <div class="entry">
+    <a class="logo" href="#">
+      <img alt="University logo" src="https://media.licdn.com/dms/image/v2/C4E0BAQEjMCRpBuUiYg/company-logo_100_100/company-logo_100_100/0/1631355051939?e=1773273600&v=beta&t=placeholder">
+    </a>
+    <div class="details">
+      <p class="title">University of Placeholder</p>
+      <p class="subtitle">Bachelor of Science - BS, Computer Science</p>
+      <p class="meta">2017 - 2021</p>
+    </div>
+  </div>
+
+  <div class="entry">
+    <a class="logo" href="#">
+      <img alt="School logo" src="https://media.licdn.com/dms/image/v2/C4E0BAQEjMCRpBuUiYg/company-logo_100_100/company-logo_100_100/0/1631355051939?e=1773273600&v=beta&t=placeholder">
+    </a>
+    <div class="details">
+      <p class="title">Placeholder Sixth Form</p>
+      <p class="subtitle">A-Levels, Maths, Computer Science, Physics</p>
+      <p class="meta">2015 - 2017</p>
     </div>
   </div>
 </div>
