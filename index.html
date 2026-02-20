@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>fakein</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230a66c2'/><text x='4' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='18' fill='white'>fn</text></svg>">
 <style>
 *, *::before, *::after {
   box-sizing: border-box;
@@ -18,24 +20,37 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 2.4rem;
-  gap: 0.8rem;
+  gap: 8px;
 }
 
 .section {
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 2.4rem;
   background: #fff;
-  width: 792px;
+  width: 100%;
+  max-width: 792px;
   border-radius: 0.8rem;
   border: 1px solid rgba(140, 140, 140, 0.2);
 }
 
+.section.selected {
+  border-color: rgba(10, 102, 194, 0.4);
+}
+
 .entry {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   padding: 1.2rem 0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.entry.selected {
+  background: rgba(10, 102, 194, 0.04);
 }
 
 .entry + .entry {
@@ -85,10 +100,6 @@ body {
   color: rgba(0, 0, 0, 0.6);
 }
 
-.meta-sep::before {
-  content: " \00b7 ";
-}
-
 .description {
   font-size: 1.4rem;
   line-height: 1.5;
@@ -128,6 +139,7 @@ a {
   outline: none;
   border-radius: 2px;
   transition: box-shadow 0.15s;
+  cursor: text;
 }
 
 [contenteditable]:hover {
@@ -144,18 +156,22 @@ a {
   bottom: 2.4rem;
   right: 2.4rem;
   display: flex;
-  gap: 0.6rem;
+  flex-direction: column;
+  gap: 0.4rem;
   z-index: 100;
+  align-items: stretch;
 }
 
 .toolbar button {
   font-family: inherit;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  padding: 0.6rem 1.4rem;
-  border-radius: 2rem;
+  padding: 0.4rem 1.4rem;
+  border-radius: 0.6rem;
   cursor: pointer;
   border: none;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .btn-primary {
@@ -177,55 +193,112 @@ a {
   background: #e8f0fe;
 }
 
-.btn-danger {
-  background: #fff;
-  color: #c00;
-  border: 1px solid rgba(140, 140, 140, 0.2) !important;
-}
-
-.btn-danger:hover {
-  background: #fce8e8;
-}
-
-/* Entry/section action buttons */
-.section-actions, .entry-actions {
-  display: none;
-  gap: 0.4rem;
-}
-
-.section:hover .section-actions,
-.entry:hover .entry-actions {
+/* Actions panel — shown when selected */
+.actions-panel {
+  position: absolute;
   display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  background: #fff;
+  padding: 0.6rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(140, 140, 140, 0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 100;
+  min-width: 120px;
 }
 
-.section-actions {
-  margin-top: 0.8rem;
+#actions-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 }
 
-.entry-actions {
-  margin-left: auto;
-  flex-shrink: 0;
-  padding-left: 0.8rem;
+#actions-panel .actions-panel {
+  pointer-events: auto;
+}
+
+.actions-panel .panel-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.4rem;
 }
 
 .action-btn {
   font-family: inherit;
-  font-size: 1.1rem;
-  padding: 0.2rem 0.6rem;
+  font-size: 1.2rem;
+  padding: 0.4rem 0.6rem;
   border-radius: 4px;
   cursor: pointer;
-  border: 1px solid rgba(140, 140, 140, 0.2);
+  border: none;
   background: #fff;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 0.7);
+  text-align: left;
 }
 
 .action-btn:hover {
   background: #f0f0f0;
 }
 
+.action-btn.remove {
+  color: #c00;
+}
+
 .action-btn.remove:hover {
   background: #fce8e8;
-  color: #c00;
+}
+
+.action-btn.ai {
+  color: #0a66c2;
+  font-weight: 600;
+}
+
+.panel-sep {
+  border: none;
+  border-top: 1px solid rgba(140, 140, 140, 0.15);
+  margin: 0.2rem 0;
+}
+
+/* AI prompt bar */
+.ai-bar {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.ai-bar input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 1.1rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid rgba(140, 140, 140, 0.2);
+  border-radius: 4px;
+  min-width: 0;
+}
+
+.ai-bar button {
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  background: #0a66c2;
+  color: #fff;
+}
+
+.ai-bar button:hover {
+  background: #004182;
+}
+
+.ai-bar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Logo edit overlay */
@@ -251,70 +324,138 @@ a {
   display: flex;
 }
 
-/* AI prompt bar */
-.ai-bar {
-  display: flex;
-  gap: 0.4rem;
-  margin-top: 0.4rem;
+/* Responsive */
+@media (max-width: 900px) {
+  body {
+    padding: 1.2rem;
+  }
+
+  .section {
+    padding: 1.6rem;
+  }
+
+  .toolbar {
+    bottom: 1.2rem;
+    right: 1.2rem;
+  }
 }
 
-.ai-bar input {
-  flex: 1;
-  font-family: inherit;
-  font-size: 1.2rem;
-  padding: 0.3rem 0.6rem;
-  border: 1px solid rgba(140, 140, 140, 0.2);
-  border-radius: 4px;
+@media (max-width: 600px) {
+  body {
+    padding: 0.6rem;
+    gap: 0.4rem;
+  }
+
+  .section {
+    padding: 1.2rem;
+    border-radius: 0.4rem;
+  }
+
+  .section-heading {
+    font-size: 1.6rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .subtitle, .meta, .description {
+    font-size: 1.2rem;
+  }
+
+  .logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .toolbar {
+    bottom: 0.6rem;
+    right: 0.6rem;
+    left: 0.6rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    padding: 0.6rem;
+    border-radius: 0.6rem;
+    border: 1px solid rgba(140, 140, 140, 0.2);
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+  }
+
+  .toolbar hr {
+    display: none;
+  }
+
+  .toolbar button {
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .actions-panel {
+    position: fixed !important;
+    bottom: 5rem;
+    left: 0.6rem;
+    right: 0.6rem;
+    top: auto !important;
+  }
 }
 
-.ai-bar button {
-  font-family: inherit;
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding: 0.3rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-  border: 1px solid #0a66c2;
-  background: #0a66c2;
-  color: #fff;
-}
-
-.ai-bar button:hover {
-  background: #004182;
-}
-
-.ai-bar button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+@media print {
+  body { padding: 0; background: #fff; }
+  .toolbar, #actions-panel, #global-ai-bar { display: none !important; }
+  .section { border: none; width: 100%; }
+  [contenteditable]:hover, [contenteditable]:focus { box-shadow: none; }
+  .logo-edit { display: none !important; }
 }
 </style>
 </head>
 <body>
 
+<div id="global-ai-bar" style="display:none; width:100%; max-width:792px; margin-bottom:0.4rem;">
+  <div class="ai-bar" style="width:100%;">
+    <input type="text" id="global-ai-input" placeholder="e.g. make everything sound more senior, add an education section..." style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();aiRewriteAll()}">
+    <button id="global-ai-btn" onclick="aiRewriteAll()">Go</button>
+    <button onclick="toggleGlobalAi()" style="background:#fff;color:rgba(0,0,0,0.6);border:1px solid rgba(140,140,140,0.2);">×</button>
+  </div>
+</div>
 <div id="app"></div>
+<div id="actions-panel"></div>
 
 <div class="toolbar">
   <button class="btn-add" onclick="addSection()">+ Section</button>
-  <button class="btn-primary" onclick="save()">Save JSON</button>
+  <hr style="border:none;border-top:1px solid rgba(140,140,140,0.2);margin:0.2rem 0;">
   <button class="btn-primary" onclick="savePng()">Save PNG</button>
+  <button class="btn-add" onclick="save()">Save JSON</button>
   <button class="btn-add" onclick="loadFile()">Load JSON</button>
+  <hr style="border:none;border-top:1px solid rgba(140,140,140,0.2);margin:0.2rem 0;">
+  <button class="btn-add" onclick="toggleGlobalAi()">AI Rewrite</button>
+  <button class="btn-add" id="global-undo-btn" onclick="undoGlobalAi()" style="display:none;color:#c00;">Undo Rewrite</button>
+  <button class="btn-add" onclick="setApiKey()">API Key</button>
 </div>
 
 <script>
 const SKILLS_ICON = `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" width="16" height="16"><path d="M12.67 2H3.33L1 6l7 8 7-8zM8.01 4h3.51l.87 1.5H3.61L4.49 4h3.53zM4.1 6.5h7.81l-3.9 4.46-3.9-4.46z"></path></svg>`;
 
-let data = {"sections":[{"heading":"Experience","entries":[{"title":"Chief Software Development Architect & Senior Principal Engineer of Technical Solutions & Platforms","subtitle":"Querio \u00b7 Full-time","meta":["Jan 2025 - Present \u00b7 1 yr 2 mos","behind you"],"logo":{"url":"https://www.linkedin.com/company/94249277/","src":"https://media.licdn.com/dms/image/v2/D4E0BAQEJHf-p24xMMA/company-logo_100_100/B4EZtK4yyRIoAU-/0/1766487961551/querioai_logo?e=1773273600&v=beta&t=yaefur4dIIOINNyXZmF5BVNO-1a24KXco305BeMD6yY","alt":"Querio logo"},"skills":"bs search and destroy , high chaos tolerance  and +1 skill"},{"title":"Software Engineer","subtitle":"Coremont","meta":["Oct 2021 - Jan 2025 \u00b7 3 yrs 4 mos","Greater London, England, United Kingdom"],"logo":{"url":"https://www.linkedin.com/company/35570842/","src":"https://media.licdn.com/dms/image/v2/C4E0BAQGLT7XYExpWtA/company-logo_100_100/company-logo_100_100/0/1655105714633/coremont_logo?e=1773273600&v=beta&t=FLjt2Lp5HLO9y4paf7mUqBu6UB75K0z6lliUwHFVRAQ","alt":"Coremont logo"},"skills":"top 5% standup nodding speed globally"},{"title":"Software Engineer","subtitle":"Patchworks","meta":["Jun 2021 - Oct 2021 \u00b7 5 mos"],"logo":{"url":"https://www.linkedin.com/company/5294972/","src":"https://media.licdn.com/dms/image/v2/C4E0BAQE_61eG7nxmaA/company-logo_100_100/company-logo_100_100/0/1658133955989/patchworks_logo?e=1773273600&v=beta&t=izX11tr7drggEIjHQ62UeAHwEcYx6710kEjxHE7o03k","alt":"Patchworks logo"}},{"title":"Software Engineer","subtitle":"Qmee","meta":["Jun 2019 - Aug 2019 \u00b7 3 mos","Reading, England, United Kingdom"],"logo":{"url":"https://www.linkedin.com/company/2900212/","src":"https://media.licdn.com/dms/image/v2/C4E0BAQGAWR846QBcsg/company-logo_100_100/company-logo_100_100/0/1660223417523/qmee_logo?e=1773273600&v=beta&t=z0zRtbZRXwMCmIazEdTlkhUvbxXBRZ9aRSGggedq-dg","alt":"Qmee logo"}},{"title":"Software Engineer","subtitle":"Elixirr","meta":["Jun 2018 - Aug 2018 \u00b7 3 mos","London Area, United Kingdom"],"logo":{"url":"https://www.linkedin.com/company/711599/","src":"https://media.licdn.com/dms/image/v2/D4E0BAQGSKHqQ4uTn5Q/company-logo_100_100/company-logo_100_100/0/1708013282669/elixirr_logo?e=1773273600&v=beta&t=ACVizTaYzK9t-cy-mQssmNsgMNZwbuHgGkS5BeqhsvQ","alt":"Elixirr logo"},"description":"- PHP development with Laravel\r\n- Design and implement content management systems for multiple products\r\n- Front End experience with Vue JS, SASS, SCSS","skills":"writing lines, smashing deadlines"}]}]};
+const DEFAULT_DATA = {"sections":[{"heading":"Experience","entries":[{"title":"Chief Software Development Architect & Senior Principal Engineer of Technical Solutions & Platforms","subtitle":"Querio \u00b7 Full-time","meta":["Jan 2025 - Present \u00b7 1 yr 2 mos","behind you"],"logo":{"url":"https://www.linkedin.com/company/94249277/","src":"https://media.licdn.com/dms/image/v2/D4E0BAQEJHf-p24xMMA/company-logo_100_100/B4EZtK4yyRIoAU-/0/1766487961551/querioai_logo?e=1773273600&v=beta&t=yaefur4dIIOINNyXZmF5BVNO-1a24KXco305BeMD6yY","alt":"Querio logo"},"skills":"bs search and destroy , high chaos tolerance  and +1 skill"},{"title":"Software Engineer","subtitle":"Coremont","meta":["Oct 2021 - Jan 2025 \u00b7 3 yrs 4 mos","Greater London, England, United Kingdom"],"logo":{"url":"https://www.linkedin.com/company/35570842/","src":"https://media.licdn.com/dms/image/v2/C4E0BAQGLT7XYExpWtA/company-logo_100_100/company-logo_100_100/0/1655105714633/coremont_logo?e=1773273600&v=beta&t=FLjt2Lp5HLO9y4paf7mUqBu6UB75K0z6lliUwHFVRAQ","alt":"Coremont logo"},"skills":"top 5% standup nodding speed globally"},{"title":"Software Engineer","subtitle":"Patchworks","meta":["Jun 2021 - Oct 2021 \u00b7 5 mos"],"logo":{"url":"https://www.linkedin.com/company/5294972/","src":"https://media.licdn.com/dms/image/v2/C4E0BAQE_61eG7nxmaA/company-logo_100_100/company-logo_100_100/0/1658133955989/patchworks_logo?e=1773273600&v=beta&t=izX11tr7drggEIjHQ62UeAHwEcYx6710kEjxHE7o03k","alt":"Patchworks logo"}},{"title":"Software Engineer","subtitle":"Qmee","meta":["Jun 2019 - Aug 2019 \u00b7 3 mos","Reading, England, United Kingdom"],"logo":{"url":"https://www.linkedin.com/company/2900212/","src":"https://media.licdn.com/dms/image/v2/C4E0BAQGAWR846QBcsg/company-logo_100_100/company-logo_100_100/0/1660223417523/qmee_logo?e=1773273600&v=beta&t=z0zRtbZRXwMCmIazEdTlkhUvbxXBRZ9aRSGggedq-dg","alt":"Qmee logo"}},{"title":"Software Engineer","subtitle":"Elixirr","meta":["Jun 2018 - Aug 2018 \u00b7 3 mos","London Area, United Kingdom"],"logo":{"url":"https://www.linkedin.com/company/711599/","src":"https://media.licdn.com/dms/image/v2/D4E0BAQGSKHqQ4uTn5Q/company-logo_100_100/company-logo_100_100/0/1708013282669/elixirr_logo?e=1773273600&v=beta&t=ACVizTaYzK9t-cy-mQssmNsgMNZwbuHgGkS5BeqhsvQ","alt":"Elixirr logo"},"description":"- PHP development with Laravel\r\n- Design and implement content management systems for multiple products\r\n- Front End experience with Vue JS, SASS, SCSS","skills":"writing lines, smashing deadlines"}]}]};
+
+let data = JSON.parse(localStorage.getItem('linkedin_data') || 'null') || DEFAULT_DATA;
+
+function persist() {
+  localStorage.setItem('linkedin_data', JSON.stringify(data));
+}
+
+let selected = null; // { type: 'entry'|'section', si, ei? }
+let aiBarOpen = false;
+let aiUndo = null; // { si, ei, snapshot }
 
 function render() {
   const app = document.getElementById('app');
   app.innerHTML = data.sections.map((section, si) => {
     const entries = section.entries.map((entry, ei) => {
-      // Meta rendered as dot-separated inline spans
-      const metaParts = (entry.meta || []).map((line, mi) => {
-        const sep = mi > 0 ? '<span class="meta-sep"></span>' : '';
-        return `${sep}<span contenteditable="true" data-s="${si}" data-e="${ei}" data-mi="${mi}" data-field="meta">${esc(line)}</span>`;
-      }).join('');
-      const metaHtml = metaParts ? `<p class="meta">${metaParts}</p>` : '';
+      const metaHtml = (entry.meta || []).map((line, mi) =>
+        `<p class="meta" contenteditable="true" data-s="${si}" data-e="${ei}" data-mi="${mi}" data-field="meta">${esc(line)}</p>`
+      ).join('');
 
       const descHtml = entry.description
         ? `<p class="description" contenteditable="true" data-s="${si}" data-e="${ei}" data-field="description">${esc(entry.description)}</p>`
@@ -324,13 +465,12 @@ function render() {
         ? `<div class="skills">${SKILLS_ICON}<span contenteditable="true" data-s="${si}" data-e="${ei}" data-field="skills">${esc(entry.skills)}</span></div>`
         : '';
 
-      const hasDesc = !!entry.description;
-      const hasSkills = !!entry.skills;
+      const isSel = selected?.type === 'entry' && selected.si === si && selected.ei === ei;
 
-      return `<div class="entry">
+      return `<div class="entry${isSel ? ' selected' : ''}" data-si="${si}" data-ei="${ei}" onclick="selectEntry(event, ${si}, ${ei})">
         <div class="logo-wrap">
           <div class="logo"><img alt="${esc(entry.logo?.alt || '')}" src="${esc(entry.logo?.src || '')}"></div>
-          <div class="logo-edit" onclick="editLogo(${si}, ${ei})">edit</div>
+          <div class="logo-edit" onclick="event.stopPropagation();editLogo(${si}, ${ei})">edit</div>
         </div>
         <div class="details">
           <p class="title" contenteditable="true" data-s="${si}" data-e="${ei}" data-field="title">${esc(entry.title)}</p>
@@ -339,30 +479,157 @@ function render() {
           ${descHtml}
           ${skillsHtml}
         </div>
-        <div class="entry-actions">
-          <button class="action-btn" onclick="addMeta(${si}, ${ei})">+meta</button>
-          ${hasDesc ? '' : `<button class="action-btn" onclick="toggleDesc(${si}, ${ei})">+desc</button>`}
-          ${hasSkills ? '' : `<button class="action-btn" onclick="toggleSkills(${si}, ${ei})">+skills</button>`}
-          <button class="action-btn remove" onclick="removeEntry(${si}, ${ei})">×</button>
-        </div>
       </div>`;
     }).join('');
 
-    return `<div class="section">
-      <h2 class="section-heading" contenteditable="true" data-s="${si}" data-field="heading">${esc(section.heading)}</h2>
+    const secSel = selected?.type === 'section' && selected.si === si;
+
+    return `<div class="section${secSel ? ' selected' : ''}" data-si="${si}">
+      <h2 class="section-heading" contenteditable="true" data-s="${si}" data-field="heading" onclick="selectSection(event, ${si})">${esc(section.heading)}</h2>
       ${entries}
-      <div class="section-actions">
-        <button class="action-btn" onclick="addEntry(${si})">+ Add entry</button>
-        <button class="action-btn remove" onclick="removeSection(${si})">Remove section</button>
-      </div>
     </div>`;
   }).join('');
 
-  // Listen for edits
   app.querySelectorAll('[contenteditable]').forEach(el => {
     el.addEventListener('blur', handleEdit);
   });
+
+  persist();
+  renderPanel();
 }
+
+function renderPanel() {
+  const panel = document.getElementById('actions-panel');
+  if (!selected) { panel.innerHTML = ''; return; }
+
+  let targetEl;
+  let html;
+
+  if (selected.type === 'section') {
+    const si = selected.si;
+    targetEl = document.querySelectorAll('.section')[si];
+    html = `<div class="actions-panel">
+      <span class="panel-label">Section</span>
+      <button class="action-btn" onclick="addEntry(${si})">+ Add entry</button>
+      <hr class="panel-sep">
+      <button class="action-btn remove" onclick="removeSection(${si})">Remove section</button>
+    </div>`;
+  } else {
+    const { si, ei } = selected;
+    const entry = data.sections[si].entries[ei];
+    const hasDesc = !!entry.description;
+    const hasSkills = !!entry.skills;
+    targetEl = document.querySelector(`.entry[data-si="${si}"][data-ei="${ei}"]`);
+
+    let aiHtml = '';
+    if (aiBarOpen) {
+      aiHtml = `<div class="ai-bar">
+        <input type="text" id="ai-input" placeholder="describe the role..." onkeydown="if(event.key==='Enter'){event.preventDefault();aiGenerate(${si},${ei})}">
+        <button id="ai-btn" onclick="aiGenerate(${si}, ${ei})">Go</button>
+      </div>`;
+    }
+
+    const undoBtn = (aiUndo && aiUndo.si === si && aiUndo.ei === ei)
+      ? `<button class="action-btn" onclick="undoAi()" style="color:#c00;">Undo AI</button>` : '';
+
+    html = `<div class="actions-panel">
+      <span class="panel-label">Entry</span>
+      <button class="action-btn ai" onclick="toggleAiBar()">AI Fill</button>
+      ${undoBtn}
+      ${aiHtml}
+      <hr class="panel-sep">
+      <button class="action-btn" onclick="addMeta(${si}, ${ei})">+ Meta line</button>
+      ${hasDesc ? '' : `<button class="action-btn" onclick="toggleDesc(${si}, ${ei})">+ Description</button>`}
+      ${hasSkills ? '' : `<button class="action-btn" onclick="toggleSkills(${si}, ${ei})">+ Skills</button>`}
+      <hr class="panel-sep">
+      <button class="action-btn" onclick="editLogo(${si}, ${ei})">Edit logo</button>
+      <button class="action-btn remove" onclick="removeEntry(${si}, ${ei})">Remove entry</button>
+    </div>`;
+  }
+
+  panel.innerHTML = html;
+
+  // Position next to the target element
+  if (targetEl) {
+    const rect = targetEl.getBoundingClientRect();
+    const panelEl = panel.querySelector('.actions-panel');
+    panelEl.style.left = (rect.right + window.scrollX + 8) + 'px';
+    panelEl.style.top = (rect.top + window.scrollY) + 'px';
+  }
+
+  if (aiBarOpen) {
+    document.getElementById('ai-input')?.focus();
+  }
+
+  // Toggle global undo button
+  const undoBtn = document.getElementById('global-undo-btn');
+  if (undoBtn) undoBtn.style.display = globalAiUndo ? '' : 'none';
+}
+
+function selectEntry(e, si, ei) {
+  e.stopPropagation();
+  if (selected?.type === 'entry' && selected.si === si && selected.ei === ei) {
+    if (!e.target.hasAttribute('contenteditable')) {
+      selected = null;
+      aiBarOpen = false;
+    }
+  } else {
+    selected = { type: 'entry', si, ei };
+    aiBarOpen = false;
+  }
+  updateSelection();
+}
+
+function selectSection(e, si) {
+  e.stopPropagation();
+  if (selected?.type === 'section' && selected.si === si) {
+    if (!e.target.hasAttribute('contenteditable')) {
+      selected = null;
+    }
+  } else {
+    selected = { type: 'section', si };
+    aiBarOpen = false;
+  }
+  updateSelection();
+}
+
+function deselect() {
+  selected = null;
+  aiBarOpen = false;
+  updateSelection();
+}
+
+function updateSelection() {
+  document.querySelectorAll('.entry.selected, .section.selected').forEach(el => el.classList.remove('selected'));
+  if (selected?.type === 'entry') {
+    const el = document.querySelector(`.entry[data-si="${selected.si}"][data-ei="${selected.ei}"]`);
+    el?.classList.add('selected');
+  } else if (selected?.type === 'section') {
+    const el = document.querySelectorAll('.section')[selected.si];
+    el?.classList.add('selected');
+  }
+  renderPanel();
+}
+
+function toggleAiBar() {
+  aiBarOpen = !aiBarOpen;
+  renderPanel();
+}
+
+function undoAi() {
+  if (!aiUndo) return;
+  const { si, ei, snapshot } = aiUndo;
+  data.sections[si].entries[ei] = snapshot;
+  aiUndo = null;
+  render();
+}
+
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.actions-panel') || e.target.closest('.toolbar')) return;
+  if (!e.target.closest('.entry') && !e.target.closest('.section-heading')) {
+    deselect();
+  }
+});
 
 function esc(str) {
   const d = document.createElement('div');
@@ -378,6 +645,7 @@ function handleEdit(e) {
 
   if (field === 'heading') {
     data.sections[si].heading = text;
+    persist();
     return;
   }
 
@@ -396,6 +664,7 @@ function handleEdit(e) {
   } else {
     entry[field] = text;
   }
+  persist();
 }
 
 function addSection() {
@@ -405,6 +674,7 @@ function addSection() {
 
 function removeSection(si) {
   data.sections.splice(si, 1);
+  selected = null;
   render();
 }
 
@@ -415,11 +685,15 @@ function addEntry(si) {
     meta: ['Date range'],
     logo: { url: '#', src: '', alt: '' }
   });
+  const ei = data.sections[si].entries.length - 1;
+  selected = { type: 'entry', si, ei };
   render();
 }
 
 function removeEntry(si, ei) {
   data.sections[si].entries.splice(ei, 1);
+  selected = null;
+  aiBarOpen = false;
   render();
 }
 
@@ -451,15 +725,32 @@ function toggleSkills(si, ei) {
 
 function editLogo(si, ei) {
   const entry = data.sections[si].entries[ei];
-  const src = prompt('Logo image URL:', entry.logo?.src || '');
-  if (src !== null) {
-    if (!entry.logo) entry.logo = { url: '#', src: '', alt: '' };
-    entry.logo.src = src;
-    const alt = prompt('Alt text:', entry.logo.alt || '');
-    if (alt !== null) entry.logo.alt = alt;
-    const url = prompt('Link URL:', entry.logo.url || '#');
-    if (url !== null) entry.logo.url = url;
+  if (!entry.logo) entry.logo = { url: '#', src: '', alt: '' };
+
+  const domain = prompt('Company domain (e.g. google.com) or leave empty to upload a file:', '');
+  if (domain === null) return;
+
+  if (domain.trim()) {
+    const d = domain.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+    entry.logo.src = location.hostname === 'localhost' ? `/logo?d=${d}` : `https://logo.uplead.com/${d}`;
+    entry.logo.alt = d.split('.')[0] + ' logo';
     render();
+  } else {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = () => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        entry.logo.src = reader.result;
+        entry.logo.alt = file.name.replace(/\.[^.]+$/, '');
+        render();
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
   }
 }
 
@@ -485,6 +776,7 @@ function loadFile() {
     const reader = new FileReader();
     reader.onload = () => {
       data = JSON.parse(reader.result);
+      selected = null;
       render();
     };
     reader.readAsText(file);
@@ -492,21 +784,158 @@ function loadFile() {
   input.click();
 }
 
-function savePng() {
+function setApiKey() {
+  const current = localStorage.getItem('anthropic_api_key') || '';
+  const key = prompt('Anthropic API key:', current);
+  if (key !== null) localStorage.setItem('anthropic_api_key', key);
+}
+
+async function aiGenerate(si, ei) {
+  const apiKey = localStorage.getItem('anthropic_api_key');
+  if (!apiKey) { alert('Set your Anthropic API key first (button in toolbar)'); return; }
+
+  const input = document.getElementById('ai-input');
+  const btn = document.getElementById('ai-btn');
+  const userPrompt = input.value.trim();
+  if (!userPrompt) return;
+
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1024,
+        system: `You generate LinkedIn profile entries. Return ONLY valid JSON matching this schema, no markdown fences:
+{"title":"Job Title","subtitle":"Company \u00b7 Employment type","meta":["Date range","Location"],"description":"bullet point achievements","skills":"comma separated skills"}
+All fields are strings. Keep it professional and concise. Description should be 2-4 bullet points starting with -. Skills should be 3-6 relevant technical/professional skills.`,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error ${res.status}`);
+    }
+
+    const result = await res.json();
+    let text = result.content[0].text.trim();
+    text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+    const generated = JSON.parse(text);
+
+    const entry = data.sections[si].entries[ei];
+    aiUndo = { si, ei, snapshot: JSON.parse(JSON.stringify(entry)) };
+
+    if (generated.title) entry.title = generated.title;
+    if (generated.subtitle) entry.subtitle = generated.subtitle;
+    if (generated.meta) entry.meta = generated.meta;
+    if (generated.description) entry.description = generated.description;
+    if (generated.skills) entry.skills = generated.skills;
+
+    aiBarOpen = false;
+    render();
+  } catch (e) {
+    alert('AI generation failed: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'Go';
+  }
+}
+
+let globalAiUndo = null;
+
+function toggleGlobalAi() {
+  const bar = document.getElementById('global-ai-bar');
+  bar.style.display = bar.style.display === 'none' ? 'flex' : 'none';
+  if (bar.style.display === 'flex') document.getElementById('global-ai-input').focus();
+}
+
+async function aiRewriteAll() {
+  const apiKey = localStorage.getItem('anthropic_api_key');
+  if (!apiKey) { alert('Set your Anthropic API key first'); return; }
+
+  const input = document.getElementById('global-ai-input');
+  const btn = document.getElementById('global-ai-btn');
+  const userPrompt = input.value.trim();
+  if (!userPrompt) return;
+
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 4096,
+        system: `You rewrite LinkedIn profile JSON data. You will receive the current JSON and an instruction. Return ONLY the modified JSON (no markdown fences). Keep the exact same schema:
+{"sections":[{"heading":"...","entries":[{"title":"...","subtitle":"...","meta":["..."],"logo":{...},"description":"...","skills":"..."}]}]}
+Preserve logo objects exactly as-is. Only modify text content as instructed.`,
+        messages: [{ role: 'user', content: `Current data:\n${JSON.stringify(data, null, 2)}\n\nInstruction: ${userPrompt}` }]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API error ${res.status}`);
+    }
+
+    const result = await res.json();
+    let text = result.content[0].text.trim();
+    text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+    const newData = JSON.parse(text);
+
+    globalAiUndo = JSON.parse(JSON.stringify(data));
+    data = newData;
+    selected = null;
+    document.getElementById('global-ai-bar').style.display = 'none';
+    input.value = '';
+    render();
+  } catch (e) {
+    alert('AI rewrite failed: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Go';
+  }
+}
+
+function undoGlobalAi() {
+  if (!globalAiUndo) return;
+  data = globalAiUndo;
+  globalAiUndo = null;
+  render();
+}
+
+async function savePng() {
   if (document.activeElement?.hasAttribute('contenteditable')) {
     document.activeElement.blur();
   }
-  // Hide action buttons during capture
-  const app = document.getElementById('app');
-  app.querySelectorAll('.entry-actions, .section-actions').forEach(el => el.style.display = 'none');
+  const prevSelected = selected;
+  selected = null;
+  updateSelection();
 
-  html2canvas(app, { backgroundColor: '#f4f2ee', scale: 2, useCORS: true }).then(canvas => {
-    app.querySelectorAll('.entry-actions, .section-actions').forEach(el => el.style.display = '');
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    a.download = 'linkedin.png';
-    a.click();
-  });
+  const app = document.getElementById('app');
+  const canvas = await html2canvas(app, { backgroundColor: '#f4f2ee', scale: 2, useCORS: true });
+
+  selected = prevSelected;
+  updateSelection();
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = 'linkedin.png';
+  a.click();
 }
 
 render();
